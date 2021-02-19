@@ -13,7 +13,7 @@ the package in S3 and triggers a re-launch of the Lambda function.
 
 The components in this module are shown below:
 
-![layout](https://github.com/conrad-mukai/terraform-aws-lambda-alarm/blob/master/draw.io/aws-lambda-alarm.png)
+![layout](https://raw.githubusercontent.com/conrad-mukai/terraform-aws-lambda-alarm/master/draw.io/aws-lambda-alarm.png)
 
 The blue lines indicate actions performed at deploy time. The black lines are
 for actions performed every time the event rule is triggered. The red lines are
