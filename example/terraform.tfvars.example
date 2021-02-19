@@ -1,0 +1,2 @@
+region = ""
+alarm_threshold = 0 # set to UTC time (in seconds)
