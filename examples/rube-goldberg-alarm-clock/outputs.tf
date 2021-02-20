@@ -4,7 +4,7 @@
 
 output lambda_function {
   value = module.example.lambda_function
-  description = "name of Lambda function checking time"
+  description = "name of Lambda function that checks time"
 }
 
 output sns_topic {

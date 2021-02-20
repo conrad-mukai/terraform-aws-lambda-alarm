@@ -49,12 +49,15 @@ version of the Lambda function. This is shown below:
 ![EventBridge Console](https://raw.githubusercontent.com/conrad-mukai/terraform-aws-lambda-alarm/master/images/eventbridge-console.png)
 
 This will redirect events to the earlier version. You can also perform some
-cleanup in the Lambda console. The version that you just deactivated will still
-show the EventBridge event triggering the version of the function, though when
-examining the event details you will see an error. You can delete this trigger.
+cleanup in the Lambda console. The unqualified version that you just
+deactivated will still show the EventBridge event triggering the version of the
+function, though when examining the event details you will see an error.
+You can delete this trigger.
 
 When the code is patched you can run the Terraform code and it will
-upload a new zip file and launch a new version of the Lambda function.
+upload a new zip file and launch a new unqualified version of the Lambda
+function. You can delete the triggering event for the rollback version in the
+Lambda console if you wish.
 
 ## Example
 

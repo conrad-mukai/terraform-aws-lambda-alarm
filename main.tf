@@ -83,6 +83,12 @@ resource aws_lambda_function function {
     security_group_ids = var.lambda_security_group_ids
     subnet_ids = var.lambda_subnet_ids
   }
+  lifecycle {
+    ignore_changes = [
+      version,
+      qualified_arn
+    ]
+  }
 }
 
 # -----------------------------------------------------------------------------
@@ -101,7 +107,6 @@ locals {
   trigger_unit_single = local.trigger_expr[1] == "d" ? "day" : local.trigger_expr[1] == "h" ? "hour" : "minute"
   trigger_unit = "${local.trigger_unit_single}${local.trigger_expr[0] == "1" ? "" : "s"}"
   schedule_expression = "rate(${local.trigger_expr[0]} ${local.trigger_unit})"
-  qualifier = regex(":(\\d+)$", aws_lambda_function.function.qualified_arn)[0]
 }
 
 resource aws_cloudwatch_event_rule trigger {
@@ -111,7 +116,7 @@ resource aws_cloudwatch_event_rule trigger {
 }
 
 resource aws_cloudwatch_event_target function {
-  arn = aws_lambda_function.function.qualified_arn
+  arn = aws_lambda_function.function.arn
   rule = aws_cloudwatch_event_rule.trigger.name
   input = var.lambda_event
 }
@@ -120,7 +125,6 @@ resource aws_lambda_permission function {
   statement_id = "AllowExecutionFromCloudWatch"
   action = "lambda:InvokeFunction"
   function_name = aws_lambda_function.function.function_name
-  qualifier = local.qualifier
   principal = "events.amazonaws.com"
   source_arn = aws_cloudwatch_event_rule.trigger.arn
 }
