@@ -33,4 +33,4 @@ At a minimum the IAM role should allow `cloudwatch:PutMetricData`. If logging
 is desired then `logs:CreateLogGroup`, `logs:CreateLogStream`, and
 `logs:PutLogEvents` should be added to the role.
 
-Refer to the `example` directory to see a working invocation of this module.
+Refer to the `examples` directory to see a working invocation of this module.
