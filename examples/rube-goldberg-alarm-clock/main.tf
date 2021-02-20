@@ -79,7 +79,7 @@ locals {
 }
 
 module example {
-  source = "./.."
+  source = "../../"
   name = var.name
   code_path = "./src"
   s3_bucket = aws_s3_bucket.repository.bucket
