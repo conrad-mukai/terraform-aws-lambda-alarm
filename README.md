@@ -13,13 +13,13 @@ the package in S3 and triggers a re-launch of the Lambda function.
 
 The components in this module are shown below:
 
-![layout](https://raw.githubusercontent.com/conrad-mukai/terraform-aws-lambda-alarm/master/draw.io/aws-lambda-alarm.png)
+![layout](https://raw.githubusercontent.com/conrad-mukai/terraform-aws-lambda-alarm/master/images/aws-lambda-alarm.png)
 
 The blue lines indicate actions performed at deploy time. The black lines are
 for actions performed every time the event rule is triggered. The red lines are
 for actions performed every time an alarm is triggered.
 
-## How to Use
+## Preparation
 
 Two resources need to be created before running this code:
 1. an S3 bucket for storing the zip file for the Lambda function; and
@@ -33,4 +33,30 @@ At a minimum the IAM role should allow `cloudwatch:PutMetricData`. If logging
 is desired then `logs:CreateLogGroup`, `logs:CreateLogStream`, and
 `logs:PutLogEvents` should be added to the role.
 
-Refer to the `examples` directory to see a working invocation of this module.
+## Deployment
+
+The initial deployment will create the requisite resources and record state.
+Should the Lambda function code change, subsequent runs will detect this and
+publish a new version of the Lambda function.
+
+## Rollback
+
+The module publishes versions of the Lambda function, so rollback simply
+requires triggering an earlier version of the function. To do this go to the
+EventBridge console and edit the rule. In the Targets section select an earlier
+version of the Lambda function. This is shown below:
+
+![EventBridge Console](https://raw.githubusercontent.com/conrad-mukai/terraform-aws-lambda-alarm/master/images/eventbridge-console.png)
+
+This will redirect events to the earlier version. You can also perform some
+cleanup in the Lambda console. The version that you just deactivated will still
+show the EventBridge event triggering the version of the function, though when
+examining the event details you will see an error. You can delete this trigger.
+
+When the code is patched you can run the Terraform code and it will
+upload a new zip file and launch a new version of the Lambda function.
+
+## Example
+
+Refer to the `examples/rube-goldberg-alarm-clock` directory to see a working
+invocation of this module.

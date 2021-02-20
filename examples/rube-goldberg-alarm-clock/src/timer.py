@@ -11,7 +11,7 @@ import boto3
 def handler(event, context):
     dt = datetime.datetime.now()
     t = dt.time()
-    tsec = ((t.hour * 60) + t.minute) * 60 + t.second
+    tsec = ((t.hour * 60) + t.minute) * 60 + t.second + t.microsecond / 1000000
     client = boto3.client('cloudwatch')
     client.put_metric_data(
         Namespace=event['MetricNamespace'],

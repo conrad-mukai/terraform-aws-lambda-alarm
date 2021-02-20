@@ -70,6 +70,7 @@ resource aws_lambda_function function {
   s3_bucket = aws_s3_bucket_object.package.bucket
   s3_key = aws_s3_bucket_object.package.key
   source_code_hash = data.archive_file.package.output_base64sha256
+  publish = true
   memory_size = var.lambda_memory
   timeout = var.lambda_timeout
   dynamic environment {
@@ -100,6 +101,7 @@ locals {
   trigger_unit_single = local.trigger_expr[1] == "d" ? "day" : local.trigger_expr[1] == "h" ? "hour" : "minute"
   trigger_unit = "${local.trigger_unit_single}${local.trigger_expr[0] == "1" ? "" : "s"}"
   schedule_expression = "rate(${local.trigger_expr[0]} ${local.trigger_unit})"
+  qualifier = regex(":(\\d+)$", aws_lambda_function.function.qualified_arn)[0]
 }
 
 resource aws_cloudwatch_event_rule trigger {
@@ -109,7 +111,7 @@ resource aws_cloudwatch_event_rule trigger {
 }
 
 resource aws_cloudwatch_event_target function {
-  arn = aws_lambda_function.function.arn
+  arn = aws_lambda_function.function.qualified_arn
   rule = aws_cloudwatch_event_rule.trigger.name
   input = var.lambda_event
 }
@@ -118,6 +120,7 @@ resource aws_lambda_permission function {
   statement_id = "AllowExecutionFromCloudWatch"
   action = "lambda:InvokeFunction"
   function_name = aws_lambda_function.function.function_name
+  qualifier = local.qualifier
   principal = "events.amazonaws.com"
   source_arn = aws_cloudwatch_event_rule.trigger.arn
 }
@@ -144,7 +147,7 @@ resource aws_lambda_permission function {
 # -----------------------------------------------------------------------------
 
 locals {
-  period = local.trigger_expr[0] * (local.trigger_expr[1] == "d" ? 86400 : local.trigger_expr[0] == "h" ? 3600 : 60)
+  period = local.trigger_expr[0] * (local.trigger_expr[1] == "d" ? 86400 : local.trigger_expr[1] == "h" ? 3600 : 60)
 }
 
 resource aws_sns_topic topic {
