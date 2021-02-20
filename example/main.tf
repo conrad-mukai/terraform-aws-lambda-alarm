@@ -1,10 +1,10 @@
 # ----------------------------------------------------------------------------
 # DEPLOY A LAMBDA ALARM IN AWS
-# Deploy a Python based terraform-aws-lambda-alarm to demonstrate how to use
-# the module. The Python script sends the UTC time in seconds to the metric
-# Example/Time. An alarm is raised when the metric is greater than or equal to
-# a threshold. Adding a subscription to the SNS topic receiving the alarm
-# creates an overly complex alarm clock.
+# Deploy a Python based lambda-alarm to demonstrate how to use the module. The
+# Python script sends the UTC time in seconds to the metric Example/Time. An
+# alarm is raised when the metric is greater than or equal to the threshold.
+# Adding a subscription to the SNS topic receiving the alarm creates an overly
+# complex alarm clock.
 # ----------------------------------------------------------------------------
 
 # ----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ resource aws_iam_role_policy lambda {
 }
 
 # ----------------------------------------------------------------------------
-# TERRAFORM-AWS-LAMBDA-ALARM
+# LAMBDA-ALARM
 # Call the module to create an alarm. The input event used to trigger the
 # function is created here. It specifies the metric namespace and name so the
 # function writes to the same metric being monitored for the alarm.

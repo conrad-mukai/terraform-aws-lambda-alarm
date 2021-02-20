@@ -1,11 +1,11 @@
 # Rube Goldberg Alarm Clock
 
 The [Rube Goldberg](https://en.wikipedia.org/wiki/Rube_Goldberg_machine) alarm
-clock uses the `terraform-aws-lambda-alarm` module to send a notification at a
-certain time. The Python code in the `src` directory computes the number of
-seconds since the beginning of the UTC day and posts that number to a
-CloudWatch custom metric. An alarm is programmed to send a notification when
-the metric reaches the desired time.
+clock uses the `lambda-alarm` module to send a notification at a certain time.
+The Python code in the `src` directory computes the number of seconds since the
+beginning of the UTC day and posts that number to a CloudWatch custom metric.
+An alarm is programmed to send a notification when the metric reaches the
+desired time.
 
 ## How to Use
 
