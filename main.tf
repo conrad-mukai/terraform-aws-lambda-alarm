@@ -13,7 +13,7 @@
 # REQUIRE A SPECIFIC TERRAFORM VERSION OR HIGHER
 # -----------------------------------------------------------------------------
 terraform {
-  required_version = ">= 0.12.6"
+  required_version = ">= 0.13.0"
 }
 
 # -----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ resource aws_s3_bucket_object package {
 # a new version of the code is ready use terraform to fix forward.
 # -----------------------------------------------------------------------------
 
-resource aws_lambda_function function {
+resource aws_lambda_function this {
   function_name = var.name
   handler = var.lambda_handler
   role = var.lambda_role
@@ -103,7 +103,7 @@ resource aws_lambda_function function {
 # -----------------------------------------------------------------------------
 
 locals {
-  trigger_expr = regex("(\\d+)([dhm])", var.trigger_period)
+  trigger_expr = regex("^(\\d+)([dhm])$", var.trigger_period)
   trigger_unit_single = local.trigger_expr[1] == "d" ? "day" : local.trigger_expr[1] == "h" ? "hour" : "minute"
   trigger_unit = "${local.trigger_unit_single}${local.trigger_expr[0] == "1" ? "" : "s"}"
   schedule_expression = "rate(${local.trigger_expr[0]} ${local.trigger_unit})"
@@ -115,16 +115,16 @@ resource aws_cloudwatch_event_rule trigger {
   schedule_expression = local.schedule_expression
 }
 
-resource aws_cloudwatch_event_target function {
-  arn = aws_lambda_function.function.arn
+resource aws_cloudwatch_event_target target {
+  arn = aws_lambda_function.this.arn
   rule = aws_cloudwatch_event_rule.trigger.name
-  input = var.lambda_event
+  input = jsonencode(var.lambda_event)
 }
 
-resource aws_lambda_permission function {
+resource aws_lambda_permission role {
   statement_id = "AllowExecutionFromCloudWatch"
   action = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.function.function_name
+  function_name = aws_lambda_function.this.function_name
   principal = "events.amazonaws.com"
   source_arn = aws_cloudwatch_event_rule.trigger.arn
 }

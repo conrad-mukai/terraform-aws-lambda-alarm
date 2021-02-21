@@ -86,7 +86,7 @@ module example {
   lambda_handler = "timer.handler"
   lambda_runtime = "python3.8"
   lambda_role = aws_iam_role.lambda.arn
-  lambda_event = jsonencode(local.lambda_event)
+  lambda_event = local.lambda_event
   trigger_period = "1m"
   metric_name = var.metric_name
   metric_namespace = var.metric_namespace

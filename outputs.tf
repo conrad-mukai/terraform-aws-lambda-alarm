@@ -3,7 +3,7 @@
  */
 
 output lambda_function {
-  value = aws_lambda_function.function.function_name
+  value = aws_lambda_function.this.function_name
   description = "name of Lambda function that generates alarms"
 }
 

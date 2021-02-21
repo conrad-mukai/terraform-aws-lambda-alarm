@@ -78,9 +78,9 @@ variable lambda_subnet_ids {
 }
 
 variable lambda_event {
-  type = string
-  description = "Lambda event input in JSON format"
-  default = ""
+  type = map(any)
+  description = "Lambda event input"
+  default = {}
 }
 
 
@@ -89,6 +89,10 @@ variable lambda_event {
 variable trigger_period {
   type = string
   description = "triggering period (ex. 10h where units are m, h, d)"
+  validation {
+    condition = can(regex("^(\\d+)([dhm])$", var.trigger_period))
+    error_message = "The trigger_period has an invalid format."
+  }
 }
 
 
@@ -116,16 +120,39 @@ variable metric_dimensions {
 variable alarm_statistic {
   type = string
   description = "CloudWatch alarm statistic to evaluate"
+  validation {
+    condition = contains([
+      "SampleCount",
+      "Average",
+      "Sum",
+      "Minimum",
+      "Maximum"
+    ], var.alarm_statistic)
+    error_message = "Valid alarm_statistic values are SampleCount, Average, Sum, Minimum, and Maximum."
+  }
 }
 
 variable alarm_evaluation_periods {
   type = number
   description = "CloudWatch alarm number of evaluation periods"
+  validation {
+    condition = var.alarm_evaluation_periods > 0
+    error_message = "The alarm_evaluation_periods must be positive."
+  }
 }
 
 variable alarm_comparison_operator {
   type = string
   description = "CloudWatch alarm comparison operator"
+  validation {
+    condition = contains([
+      "GreaterThanOrEqualToThreshold",
+      "GreaterThanThreshold",
+      "LessThanThreshold",
+      "LessThanOrEqualToThreshold"
+    ], var.alarm_comparison_operator)
+    error_message = "Valid alarm_comparison_operator values are GreaterThanOrEqualToThreshold, GreaterThanThreshold, LessThanThreshold, and LessThanOrEqualToThreshold."
+  }
 }
 
 variable alarm_threshold {
