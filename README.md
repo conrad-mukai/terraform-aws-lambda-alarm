@@ -25,9 +25,8 @@ Two resources need to be created before running this code:
 1. an S3 bucket for storing the zip file for the Lambda function; and
 1. an IAM role granting the Lambda function runtime access.
 
-The S3 bucket should enable versioning to support rollback to previous versions
-of the code. The module does not support rollback so it should be done
-manually. When a fix is in place the module can be used to deploy the new code.
+The S3 bucket should optionally enable versioning so versions of the code are
+archived.
 
 At a minimum the IAM role should allow `cloudwatch:PutMetricData`. If logging
 is desired then `logs:CreateLogGroup`, `logs:CreateLogStream`, and

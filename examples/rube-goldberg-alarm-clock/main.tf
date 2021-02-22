@@ -18,7 +18,7 @@ provider aws {
 # ----------------------------------------------------------------------------
 # S3 BUCKET
 # Create an S3 bucket for the example. The bucket is created with versioning
-# enabled to simplify code rollback.
+# enabled to archive all versions of the package.
 # ----------------------------------------------------------------------------
 resource aws_s3_bucket repository {
   bucket_prefix = var.name
